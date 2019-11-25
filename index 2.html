@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+		<style>
+				#snowflakeContainer {
+				  position: absolute;
+				  left: 0px;
+				  top: 0px;
+				  display: none;
+				}
+		  
+				.snowflake {
+				  position: fixed;
+				  /*background-color: #ccc;*/
+				  background-color: black;
+				  user-select: none;
+				  z-index: 1000;
+				  pointer-events: none;
+				  border-radius: 50%;
+				  width: 15px;
+				  height: 15px;
+				}
+			  </style>
+			  <script>
+				var snowflakes = [];
+				var browserWidth;
+				var browserHeight;
+				var numberOfSnowflakes = 105;
+		  
+				window.addEventListener("DOMContentLoaded", generateSnowflakes, false);
+		  
+				// Make snowflakes
+				function Snowflake(element, speed, xPos, yPos) {
+				  // set initial snowflake properties
+				  this.element = element;
+				  this.speed = speed;
+				  this.xPos = xPos;
+				  this.yPos = yPos;
+				  this.scale = 1;
+		  
+				  // declare variables used for snowflake's motion
+				  this.counter = 0;
+				  this.sign = Math.random() < 0.5 ? 1 : -1;
+		  
+				  // setting an initial opacity and size for our snowflake
+				  this.element.style.opacity = (0.1 + Math.random()) / 3;
+				}
+		  
+				// The function responsible for actually moving our snowflake
+				Snowflake.prototype.move = function() {
+				  this.counter += this.speed / 5000;
+				  this.xPos += (this.sign * this.speed * Math.cos(this.counter)) / 35;
+				  this.yPos += Math.sin(this.counter) / 40 + this.speed / 45;
+				  this.scale = 0.5 + Math.abs((10 * Math.cos(this.counter)) / 26);
+		  
+				  // setting our snowflake's position
+				  setTransform(
+					Math.round(this.xPos),
+					Math.round(this.yPos),
+					this.scale,
+					this.element
+				  );
+		  
+				  // if snowflake goes below the browser window, move it back to the top
+				  if (this.yPos > browserHeight) {
+					this.yPos = -50;
+				  }
+				};
+		  
+				// A performant way to set your snowflake's position and size
+				function setTransform(xPos, yPos, scale, el) {
+				  el.style.transform = `translate(${xPos}px, ${yPos}px) scale(${scale}, ${scale})`;
+				}
+		  
+				// The function responsible for creating the snowflake
+				function generateSnowflakes() {
+				  var originalSnowflake = document.querySelector(".snowflake");
+		  
+				  // access our snowflake element's parent container
+				  var snowflakeContainer = originalSnowflake.parentNode;
+				  snowflakeContainer.style.display = "block";
+		  
+				  // get our browser's size
+				  browserWidth = document.documentElement.clientWidth;
+				  browserHeight = document.documentElement.clientHeight;
+		  
+				  // create each individual snowflake
+				  for (var i = 0; i < numberOfSnowflakes; i++) {
+					var snowflakeClone = originalSnowflake.cloneNode(true);
+					snowflakeContainer.appendChild(snowflakeClone);
+		  
+					// set our snowflake's initial position and related properties
+					var initialXPos = getPosition(50, browserWidth);
+					var initialYPos = getPosition(50, browserHeight);
+					var speed = 5 + Math.random() * 40;
+		  
+					// create our Snowflake object
+					var snowflakeObject = new Snowflake(
+					  snowflakeClone,
+					  speed,
+					  initialXPos,
+					  initialYPos
+					);
+					snowflakes.push(snowflakeObject);
+				  }
+		  
+				  // remove the original snowflake because we no longer need it visible
+				  snowflakeContainer.removeChild(originalSnowflake);
+		  
+				  moveSnowflakes();
+				}
+		  
+				function moveSnowflakes() {
+				  for (var i = 0; i < snowflakes.length; i++) {
+					var snowflake = snowflakes[i];
+					snowflake.move();
+				  }
+		  
+				  requestAnimationFrame(moveSnowflakes);
+				}
+		  
+				// This function returns a number between (maximum - offset) and (maximum + offset)
+				function getPosition(offset, size) {
+				  return Math.round(-1 * offset + Math.random() * (size + 2 * offset));
+				}
+			  </script>
+	<title> 김윤진 </title>
+	<meta charset="UTF-8">
+	<meta name="description" content="김윤진 포트폴리오">
+	<meta name="keywords" content="화장품, 기획">
+	<link rel="stylesheet" href="Style.css">
+</head>
+<body style="background-color:lightgray;">
+		<div id="snowflakeContainer">
+				<span class="snowflake"></span>
+			  </div>
+	<!-- Main section start -->
+	<div class="main-site-warp">
+		<div class="site-menu-warp">
+			            
+            <!-- Main menu -->
+			<nav class="site-menu">
+				<a href="" class="active">Home</a>
+				<a href="">About Me</a>
+				<a href="">Blog</a>
+				<a href="">Portfolio</a>
+				<a href="">Contact</a>
+			
+            </nav>
+        </div>
+    
+			</header>
+            <div class="site-content-warp"></div>
+        
+			<!-- Left Side section -->
+			<div class="main-sidebar">
+				<div class="mb-warp">
+					<a href="index.html" class="site-logo">
+						<h2> 김윤진 </h2>
+						<h3>화장품 BM</h3>
+					</a>
+					<div class="about-info">
+						<h2>Let me introduce about me, YounJin Kim</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus libero mauris, bibendum eget sapien ac, ultrices rhoncus ipsum. Donec nec sapien in urna fermentum ornare. Morbi vel ultrices leo. Sed eu turpis eu arcu vehicula fringilla ut vitae orci. Suspendisse maximus malesuada  </p>
+					</div>
+					<ul class="contact-info">
+						<li>+82 010-2016-0403</li>
+						<li><a href="https://www.instagram.com/y.x_xinn/">https://www.instagram.com/y.x_xinn/</a></li>
+					</ul>
+					<a href="#" class="site-btn">see my portfolio <img src="img/arrow-right.png" alt=""></a>
+				</div>
+			</div>
+			<!-- Left Side section end -->
+			<!-- Page start -->
+			<div class="page-section">
+				<div class="hero-section">
+					<div class="hero-scroll">
+						<div class="hero-track">
+							<div class="hs-item set-bg" data-setbg="img/hero/1.jpg">
+								<div class="hs-info">
+                                <hr>
+									<h5>ASTRO</h5>
+									<p><b>My love</b></p>
+									<a href="#"><img src="img/arrow-right.png" alt=""></a>
+                                    <image src="C:/Users/user/Desktop/astro.jpg"></image>
+                                </div>
+							</div>
+							<div class="hs-item set-bg" data-setbg="img/hero/2.jpg">
+								<div class="hs-info">
+                                <hr>
+									<h5>CHA EUN WOO</h5>
+									<p><b>My favorite</b></p>
+									<a href="#"><img src="img/arrow-right.png" alt=""></a>
+                                    <image src="C:/Users/user/Desktop/cha eun woo.jpg" width=300></image>
+                                </div>
+							</div>
+							<div class="hs-item set-bg" data-setbg="img/hero/1.jpg">
+								<div class="hs-info">
+                                <hr>
+									<h5><b>MUSIC</b></h5>
+									<p>BLUE FLAME</p>
+                                    <a href="#"><img src="img/arrow-right.png" alt=""></a>
+                                    <image src="C:/Users/user/Desktop/blue flame.jpg"></image>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Page end -->
+		</div>
+		<div class="copyright"><p>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | by 김윤진 </a>
+  </p></div>
+	</div>
+
+	</body>
+</html>
